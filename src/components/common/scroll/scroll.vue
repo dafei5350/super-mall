@@ -7,9 +7,9 @@
 </template>
 
 <script>
-import BScroll from "@better-scroll/core"
+import BScroll from "better-scroll"
 export default {
-  name: 'SuperMallScroll',
+  name: 'Scroll',
   props: {
     probeType: {
       type: Number,
@@ -57,7 +57,15 @@ export default {
   },
 
   methods: {
-
+    scrollTo(x, y, time=500){
+      this.scroll && this.scroll.scrollTo(x, y, time)
+    },
+    finishPullUp() {
+      this.scroll && this.scroll.finishPullUp()
+    },
+    refresh(){
+      this.scroll && this.scroll.refresh()
+    }
   },
 };
 </script>

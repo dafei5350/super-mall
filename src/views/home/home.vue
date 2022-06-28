@@ -6,7 +6,9 @@
     <Scroll
       ref="scroll"
       :probeType="3"
-      :isPullUp="true"
+      :pull-up-load="true"
+      @scroll="contentScroll"
+      @pullingUp="loadMore"
       class="content">
 
       <HomeSwiper class="swiper-top" :banners="banners"></HomeSwiper>
@@ -18,6 +20,7 @@
         class="tab-top"></TabControl>
       <GoodsList :goods="showGoodList"></GoodsList>
     </Scroll>
+    <backTop @click.native="onTop"></backTop>
   </div>
 </template>
 
@@ -26,6 +29,7 @@
 import NavBar from "components/common/navbar/NavBar.vue"
 import HomeSwiper from "components/content/home/HomeSwiper.vue"
 import Scroll from "components/common/scroll/scroll.vue"
+import backTop from "components/content/backTop/backTop.vue"
 import {
   getHomeMultidata,
   getHomeGoods,
@@ -48,6 +52,7 @@ export default {
     TabControl,
     GoodsList,
     Scroll,
+    backTop,
   },
   data() {
     return {
@@ -125,12 +130,25 @@ export default {
 				this.$refs.tabControl1.currentIndex = index;
 				this.$refs.tabControl2.currentIndex = index;
     },
+    contentScroll(position){
+				//返回顶部是否显示
+				this.isShowBackTop = (-position.y) > 500;
+				this.isTabShow = (-position.y) > this.tabOffsetTop;
+    },
+    loadMore() {
+      //下拉加载更多
+      this.getHomeGoods(this.currentType);
+      this.$refs.scroll.scroll.scrollTo(0,0,500);
+    },
+    onTop() {
+      this.$refs.scroll.scrollTo(0,0);
+    },
   }
 }
 
 </script>
 
-<style>
+<style  scoped>
 	#home {
 		position: relative;
 		height: 100vh;
@@ -149,16 +167,18 @@ export default {
 		top: 44px;
 		z-index: 9;
 	}
-  .swiper-top {
+  /* .swiper-top {
     margin-top:44px;
-  }
+  } */
 	.content {
-		overflow: hidden;
-		position: absolute;
+    height: calc(100vh - 93px);
+		/* overflow: hidden; */
+    margin-top: 44px;
+		/* position: absolute;
 		left: 0;
 		right: 0;
 		top: 44px;
-		bottom: 49px;
+		bottom: 49px; */
 	}
   .tab-top {
     position: sticky;
